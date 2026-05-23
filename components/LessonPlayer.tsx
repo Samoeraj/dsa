@@ -6,12 +6,8 @@ import type { LessonDefinition } from "@/lib/types";
 import { getSandboxSteps } from "@/lib/lessons";
 import { getLessonProgress, saveLessonProgress } from "@/lib/progress";
 import { buildShareUrl } from "@/lib/share-params";
-import { cn } from "@/lib/utils";
 import { IsometricCanvas } from "./renderers/IsometricCanvas";
 import { MicroPrompt } from "./MicroPrompt";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { Card, CardContent } from "./ui/card";
 
 type Props = {
   lesson: LessonDefinition;
@@ -111,8 +107,8 @@ export function LessonPlayer({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="player-stack">
+      <div className="player-toolbar">
         <div className="segmented" role="tablist" aria-label="Lesson mode">
           <button
             type="button"
@@ -139,19 +135,18 @@ export function LessonPlayer({
             Try it
           </button>
         </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="muted">
-            {stepIndex + 1} / {steps.length}
-          </Badge>
-          {getLessonProgress(lesson.slug)?.completed && <Badge variant="copper">Complete</Badge>}
-        </div>
+        <span className="step-meta">
+          {stepIndex + 1} / {steps.length}
+          {getLessonProgress(lesson.slug)?.completed ? " · Complete" : ""}
+        </span>
       </div>
 
       {mode === "sandbox" && (
-        <Card>
-          <CardContent className="flex flex-wrap items-end gap-6 pt-4">
+        <div className="panel">
+          <div className="panel-header">Sandbox</div>
+          <div className="panel-body sandbox-row">
             {"minLength" in lesson.sandbox && (
-              <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-wider text-fact-muted">
+              <label className="field-label">
                 Size
                 <input
                   type="range"
@@ -162,13 +157,12 @@ export function LessonPlayer({
                     setSandboxLength(Number(e.target.value));
                     setStepIndex(0);
                   }}
-                  className="w-40"
                 />
-                <span className="font-mono text-sm font-bold normal-case tracking-normal text-fact-orange">{sandboxLength}</span>
+                <span style={{ fontSize: "0.875rem", textTransform: "none", letterSpacing: 0 }}>{sandboxLength}</span>
               </label>
             )}
             {"presets" in lesson.sandbox && (
-              <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-wider text-fact-muted">
+              <label className="field-label">
                 Preset
                 <select
                   value={sandboxPreset}
@@ -176,7 +170,6 @@ export function LessonPlayer({
                     setSandboxPreset(e.target.value);
                     setStepIndex(0);
                   }}
-                  className="rounded-sm border-2 border-fact-border bg-fact-panel-light px-3 py-2 text-sm font-semibold normal-case tracking-normal text-fact-text"
                 >
                   {lesson.sandbox.presets.map((p) => (
                     <option key={p} value={p}>
@@ -187,7 +180,7 @@ export function LessonPlayer({
               </label>
             )}
             {"maxItems" in lesson.sandbox && (
-              <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-wider text-fact-muted">
+              <label className="field-label">
                 Items
                 <input
                   type="range"
@@ -195,72 +188,72 @@ export function LessonPlayer({
                   max={lesson.sandbox.maxItems}
                   value={sandboxLength}
                   onChange={(e) => setSandboxLength(Number(e.target.value))}
-                  className="w-40"
                 />
               </label>
             )}
-            <Button variant="secondary" size="sm" onClick={regenerateSandbox}>
-              <RotateCcw className="h-4 w-4" /> Regenerate
-            </Button>
-          </CardContent>
-        </Card>
+            <button type="button" className="btn btn-secondary" onClick={regenerateSandbox}>
+              <RotateCcw size={16} /> Regenerate
+            </button>
+          </div>
+        </div>
       )}
 
       <IsometricCanvas elements={step.elements} edges={step.edges} />
 
-      <div aria-live="polite" aria-atomic="true" className="panel space-y-2 p-4">
-        <p className="text-lg font-bold text-fact-text">{step.caption}</p>
-        <p className="text-sm leading-relaxed text-fact-muted">{step.description}</p>
+      <div aria-live="polite" aria-atomic="true">
+        <p className="caption-serif">{step.caption}</p>
+        <p className="text-muted" style={{ marginTop: "0.5rem", fontSize: "0.875rem", lineHeight: 1.6 }}>
+          {step.description}
+        </p>
       </div>
 
       {step.microPrompt && !promptCleared && (
         <MicroPrompt prompt={step.microPrompt} onAnswered={() => setPromptCleared(true)} />
       )}
 
-      <div className="flex flex-wrap items-center gap-2">
-        <Button variant="secondary" size="icon" onClick={goPrev} disabled={stepIndex === 0} aria-label="Previous step">
-          <ChevronLeft />
-        </Button>
-        <Button
-          variant="secondary"
-          size="icon"
+      <div className="controls-row">
+        <button type="button" className="icon-btn" onClick={goPrev} disabled={stepIndex === 0} aria-label="Previous step">
+          <ChevronLeft size={18} />
+        </button>
+        <button
+          type="button"
+          className="icon-btn"
           onClick={() => setPlaying((p) => !p)}
           disabled={atEnd || blockedByPrompt}
           aria-label={playing ? "Pause" : "Play"}
         >
-          {playing ? <Pause /> : <Play />}
-        </Button>
-        <Button
-          variant="default"
-          size="icon"
+          {playing ? <Pause size={18} /> : <Play size={18} />}
+        </button>
+        <button
+          type="button"
+          className="icon-btn icon-btn--primary"
           onClick={goNext}
           disabled={atEnd || blockedByPrompt}
           aria-label="Next step"
         >
-          <ChevronRight />
-        </Button>
-        <Button variant="ghost" size="sm" onClick={() => setStepIndex(0)}>
+          <ChevronRight size={18} />
+        </button>
+        <button type="button" className="ghost-btn" onClick={() => setStepIndex(0)}>
           Reset
-        </Button>
-        <Button variant="ghost" size="sm" onClick={copyLink} className="ml-auto">
-          {copied ? <Copy className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
-          {copied ? "Copied!" : "Share step"}
-        </Button>
+        </button>
+        <button type="button" className="ghost-btn" onClick={copyLink} style={{ marginLeft: "auto" }}>
+          {copied ? <Copy size={16} /> : <Share2 size={16} />}
+          {copied ? "Copied" : "Share step"}
+        </button>
       </div>
 
-      <ol className="panel mt-4 space-y-2 p-4 text-sm">
-        <li className="panel-header -mx-4 -mt-4 mb-2">Production log</li>
+      <ol className="step-outline">
+        <li className="label-caps" style={{ listStyle: "none", marginBottom: "0.5rem" }}>
+          Steps
+        </li>
         {steps.map((s, i) => (
           <li key={s.id}>
             <button
               type="button"
-              className={cn(
-                "text-left text-fact-muted hover:text-fact-copper",
-                i === stepIndex && "font-bold text-fact-orange"
-              )}
+              className={i === stepIndex ? "is-active" : undefined}
               onClick={() => setStepIndex(i)}
             >
-              {String(i + 1).padStart(2, "0")} — {s.caption}
+              {String(i + 1).padStart(2, "0")}. {s.caption}
             </button>
           </li>
         ))}

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LessonPlayer } from "@/components/LessonPlayer";
-import { Badge } from "@/components/ui/badge";
 import { LESSONS, getLesson, getLessonSlugs } from "@/lib/lessons";
 import { parseShareParams } from "@/lib/share-params";
 
@@ -18,7 +17,7 @@ export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const lesson = getLesson(slug);
   if (!lesson) return { title: "Not found" };
-  return { title: `${lesson.title} — DSA Factory` };
+  return { title: `${lesson.title} — DSA` };
 }
 
 export default async function LessonPage({ params, searchParams }: PageProps) {
@@ -34,33 +33,30 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
   const next = ordered[idx + 1];
 
   return (
-    <article className="space-y-8">
-      <header className="panel overflow-hidden">
-        <div className="panel-header">Blueprint</div>
-        <div className="space-y-3 p-4">
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="muted">
-              {lesson.track === "foundations" ? "Line A" : "Line B"}
-            </Badge>
-          </div>
-          <h1 className="text-3xl font-black text-fact-text">{lesson.title}</h1>
-          <ul className="space-y-1 text-sm text-fact-muted">
-            {lesson.learningGoals.map((g) => (
-              <li key={g}>▸ {g}</li>
-            ))}
-          </ul>
-        </div>
+    <article style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
+      <header style={{ paddingBottom: "2rem", borderBottom: "1px solid #e8e6e1" }}>
+        <p className="label-caps" style={{ marginBottom: "0.75rem" }}>
+          {lesson.track === "foundations" ? "Foundations" : "Trees & graphs"}
+        </p>
+        <h1 className="heading-lesson">{lesson.title}</h1>
+        <ul className="text-muted" style={{ marginTop: "1rem", fontSize: "0.875rem", paddingLeft: 0, listStyle: "none" }}>
+          {lesson.learningGoals.map((g) => (
+            <li key={g} style={{ marginTop: "0.25rem" }}>
+              {g}
+            </li>
+          ))}
+        </ul>
       </header>
 
-      <section className="panel">
-        <div className="panel-header">Briefing</div>
-        <div className="space-y-3 p-4 text-fact-text">
-          {lesson.intro.map((p) => (
-            <p key={p} className="leading-relaxed">
-              {p}
-            </p>
-          ))}
-        </div>
+      <section>
+        <p className="label-caps" style={{ marginBottom: "0.75rem" }}>
+          Introduction
+        </p>
+        {lesson.intro.map((p) => (
+          <p key={p} style={{ lineHeight: 1.65, marginBottom: "0.75rem" }}>
+            {p}
+          </p>
+        ))}
       </section>
 
       <LessonPlayer
@@ -70,24 +66,24 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         initialLength={shared.length}
       />
 
-      <section className="panel">
-        <div className="panel-header">Debrief</div>
-        <div className="space-y-3 p-4 text-fact-muted">
-          {lesson.outro.map((p) => (
-            <p key={p} className="leading-relaxed">
-              {p}
-            </p>
-          ))}
-        </div>
+      <section>
+        <p className="label-caps" style={{ marginBottom: "0.75rem" }}>
+          Summary
+        </p>
+        {lesson.outro.map((p) => (
+          <p key={p} className="text-muted" style={{ lineHeight: 1.65, marginBottom: "0.75rem" }}>
+            {p}
+          </p>
+        ))}
       </section>
 
-      <footer className="flex flex-wrap gap-4 border-t-2 border-fact-border pt-6 text-sm font-semibold">
-        <Link href="/" className="text-fact-muted no-underline hover:text-fact-copper">
-          ← Blueprints
+      <footer style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", paddingTop: "2rem", borderTop: "1px solid #e8e6e1", fontSize: "0.875rem" }}>
+        <Link href="/" className="text-muted" style={{ textDecoration: "none" }}>
+          All lessons
         </Link>
         {next && (
-          <Link href={`/learn/${next.slug}`} className="text-fact-copper no-underline hover:text-fact-orange">
-            Next: {next.title} →
+          <Link href={`/learn/${next.slug}`} style={{ fontWeight: 500, textDecoration: "none" }}>
+            Next: {next.title}
           </Link>
         )}
       </footer>

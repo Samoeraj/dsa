@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { MicroPrompt as MicroPromptType } from "@/lib/types";
-import { Button } from "./ui/button";
 
 type Props = {
   prompt: MicroPromptType;
@@ -22,30 +21,31 @@ export function MicroPrompt({ prompt, onAnswered }: Props) {
 
   return (
     <div className="panel">
-      <div className="panel-header">Quality check</div>
-      <div className="space-y-3 p-4">
-        <p className="font-semibold text-fact-text">{prompt.question}</p>
-        <div className="flex flex-col gap-2" role="group" aria-label="Answer choices">
+      <div className="panel-header">Question</div>
+      <div className="panel-body" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <p style={{ fontWeight: 500, margin: 0 }}>{prompt.question}</p>
+        <div role="group" aria-label="Answer choices" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {prompt.options.map((opt, i) => (
-            <Button
+            <button
               key={opt}
-              variant={selected === i ? (i === prompt.correctIndex ? "default" : "secondary") : "secondary"}
-              className="w-full justify-start"
+              type="button"
+              className={`btn ${selected === i && i === prompt.correctIndex ? "btn-primary" : "btn-secondary"}`}
+              style={{ width: "100%", justifyContent: "flex-start" }}
               onClick={() => handleSelect(i)}
               disabled={selected === prompt.correctIndex}
             >
               {opt}
-            </Button>
+            </button>
           ))}
         </div>
         {showHint && selected !== prompt.correctIndex && (
-          <p className="text-sm text-fact-copper" role="status">
-            Hint: {prompt.hint}
+          <p className="text-muted" style={{ margin: 0, fontSize: "0.875rem" }} role="status">
+            {prompt.hint}
           </p>
         )}
         {selected === prompt.correctIndex && (
-          <p className="text-sm font-bold text-[#81c784]" role="status">
-            Approved — continue.
+          <p className="text-muted" style={{ margin: 0, fontSize: "0.875rem" }} role="status">
+            Correct.
           </p>
         )}
       </div>

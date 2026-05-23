@@ -1,144 +1,466 @@
 @import "tailwindcss";
-
-@source "../app/**/*.{js,ts,jsx,tsx}";
-@source "../components/**/*.{js,ts,jsx,tsx}";
-@source "../lib/**/*.{js,ts}";
+@config "../tailwind.config.ts";
 
 @theme {
-  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Consolas", "SF Mono", ui-monospace, monospace;
+  --font-sans: var(--font-raleway), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
 
-  --color-fact-bg: #1e1e1e;
-  --color-fact-panel: #2d2d2d;
-  --color-fact-panel-light: #383838;
-  --color-fact-border: #4a4a4a;
-  --color-fact-border-hi: #6e6e6e;
-  --color-fact-text: #e8e8e8;
-  --color-fact-muted: #9e9e9e;
-  --color-fact-copper: #e39423;
-  --color-fact-orange: #f28b1a;
-  --color-fact-grass: #4a8f3a;
-  --color-fact-sky-top: #5b8cb8;
-  --color-fact-sky-bot: #3d5f45;
+  --color-canvas: #f8f7f4;
+  --color-surface: #ffffff;
+  --color-line: #e8e6e1;
+  --color-line-strong: #d4d2cc;
+  --color-ink: #2a2a2a;
+  --color-muted: #7a7a7a;
 }
 
+/* ── Base (always on — not dependent on utility scanning) ── */
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   min-height: 100vh;
-  font-family: var(--font-sans);
+  margin: 0;
+  font-family: var(--font-raleway), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  background-color: var(--color-fact-bg);
-  color: var(--color-fact-text);
-  background-image:
-    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(91, 140, 184, 0.25), transparent 50%),
-    linear-gradient(180deg, #252525 0%, var(--color-fact-bg) 40%);
+  background-color: #f8f7f4;
+  color: #2a2a2a;
 }
 
 a {
-  color: var(--color-fact-copper);
-  text-decoration: none;
+  color: #2a2a2a;
+  text-decoration: underline;
+  text-decoration-color: #d4d2cc;
+  text-underline-offset: 3px;
 }
 
 a:hover {
-  color: var(--color-fact-orange);
+  text-decoration-color: #2a2a2a;
 }
 
 ::selection {
-  background: var(--color-fact-orange);
-  color: #1a1a1a;
+  background: #e8e6e1;
+  color: #2a2a2a;
 }
 
-/* Factorio-style factory floor viewport */
+.font-serif {
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+}
+
+/* ── Layout shell ── */
+.site-header {
+  border-bottom: 1px solid #e8e6e1;
+  background: #ffffff;
+}
+
+.site-header__inner {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-logo {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: #2a2a2a;
+  text-decoration: none;
+}
+
+.site-logo:hover {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.875rem;
+  color: #7a7a7a;
+}
+
+.site-nav a {
+  color: #7a7a7a;
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  color: #2a2a2a;
+}
+
+.site-main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+/* ── Typography ── */
+.heading-display {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(2.25rem, 5vw, 3rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #2a2a2a;
+  margin: 0;
+}
+
+.heading-section {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #2a2a2a;
+  margin: 0;
+}
+
+.heading-lesson {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.875rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #2a2a2a;
+  margin: 0;
+}
+
+.text-lead {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: #7a7a7a;
+  max-width: 32rem;
+}
+
+.text-muted {
+  color: #7a7a7a;
+}
+
+.label-caps {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  padding: 0 1.25rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 2px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.btn-primary {
+  background: #2a2a2a;
+  color: #f8f7f4;
+}
+
+.btn-primary:hover {
+  background: #424242;
+  text-decoration: none;
+  color: #f8f7f4;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #2a2a2a;
+  border: 1px solid #d4d2cc;
+}
+
+.btn-secondary:hover {
+  border-color: #2a2a2a;
+  text-decoration: none;
+  color: #2a2a2a;
+}
+
+/* ── Lesson list ── */
+.lesson-list {
+  border-top: 1px solid #e8e6e1;
+  border-bottom: 1px solid #e8e6e1;
+}
+
+.lesson-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #e8e6e1;
+}
+
+.lesson-row:last-child {
+  border-bottom: none;
+}
+
+@media (min-width: 640px) {
+  .lesson-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.lesson-row__title {
+  font-weight: 500;
+  color: #2a2a2a;
+  margin: 0;
+}
+
+.lesson-row__link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #2a2a2a;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.lesson-row__link:hover {
+  opacity: 0.65;
+}
+
+/* ── Isometric viewport ── */
 .viz-stage {
   position: relative;
   width: 100%;
-  min-height: 32rem;
-  border: 2px solid var(--color-fact-border);
-  border-radius: 4px;
-  background: linear-gradient(180deg, var(--color-fact-sky-top) 0%, var(--color-fact-sky-bot) 35%, #2d4a28 36%);
+  min-height: 30rem;
+  border: 1px solid #e8e6e1;
+  border-radius: 2px;
+  background: #ffffff;
   overflow: hidden;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 8px 32px rgba(0, 0, 0, 0.45);
 }
 
 .viz-stage__label {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.5rem 0.875rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  padding: 0.75rem 1rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-fact-text);
-  border-bottom: 2px solid var(--color-fact-border);
-  background: linear-gradient(180deg, #3d3d3d 0%, var(--color-fact-panel) 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.viz-stage__label::before {
-  content: "";
-  width: 4px;
-  height: 1rem;
-  background: var(--color-fact-orange);
-  border-radius: 1px;
+  color: #7a7a7a;
+  border-bottom: 1px solid #e8e6e1;
+  background: #f8f7f4;
 }
 
 .viz-stage__canvas {
   display: block;
   width: 100%;
-  min-height: 28rem;
-  padding: 0.5rem;
+  min-height: 26rem;
+  padding: 1.25rem;
+  background: linear-gradient(165deg, #faf9f7 0%, #f0efec 100%);
 }
 
-/* Factorio tab control */
+/* ── Controls ── */
 .segmented {
   display: inline-flex;
-  padding: 2px;
-  border-radius: 4px;
-  background: #1a1a1a;
-  border: 2px solid var(--color-fact-border);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  padding: 3px;
+  border-radius: 2px;
+  background: #f8f7f4;
+  border: 1px solid #e8e6e1;
 }
 
 .segmented button {
-  padding: 0.45rem 1.1rem;
+  padding: 0.4rem 1rem;
+  font-family: inherit;
   font-size: 0.8125rem;
-  font-weight: 600;
-  border-radius: 2px;
-  color: var(--color-fact-muted);
-  transition: background 0.12s, color 0.12s;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  border-radius: 1px;
+  color: #7a7a7a;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
 }
 
 .segmented button:hover {
-  color: var(--color-fact-text);
+  color: #2a2a2a;
 }
 
 .segmented button[aria-selected="true"] {
-  background: linear-gradient(180deg, #5a5a5a 0%, #454545 100%);
-  color: var(--color-fact-text);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  background: #ffffff;
+  color: #2a2a2a;
+  box-shadow: 0 1px 2px rgba(42, 42, 42, 0.06);
 }
 
-/* Industrial panel */
 .panel {
-  border: 2px solid var(--color-fact-border);
-  border-radius: 4px;
-  background: var(--color-fact-panel);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  border: 1px solid #e8e6e1;
+  border-radius: 2px;
+  background: #ffffff;
 }
 
 .panel-header {
-  padding: 0.5rem 0.875rem;
+  padding: 0.625rem 1rem;
   font-size: 0.6875rem;
-  font-weight: 700;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+  border-bottom: 1px solid #e8e6e1;
+}
+
+.panel-body {
+  padding: 1.25rem;
+}
+
+/* Player controls row */
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid #d4d2cc;
+  border-radius: 2px;
+  background: #ffffff;
+  color: #2a2a2a;
+  cursor: pointer;
+}
+
+.icon-btn:hover:not(:disabled) {
+  border-color: #2a2a2a;
+}
+
+.icon-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.icon-btn--primary {
+  background: #2a2a2a;
+  border-color: #2a2a2a;
+  color: #f8f7f4;
+}
+
+.step-meta {
+  font-size: 0.6875rem;
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-fact-muted);
-  border-bottom: 2px solid var(--color-fact-border);
-  background: #333;
+  color: #7a7a7a;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e8e6e1;
+  margin: 2rem 0;
+}
+
+.field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+}
+
+.field-label input[type="range"] {
+  width: 10rem;
+}
+
+.field-label select {
+  padding: 0.5rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  border: 1px solid #d4d2cc;
+  border-radius: 2px;
+  background: #fff;
+  color: #2a2a2a;
+}
+
+.step-outline {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e8e6e1;
+  font-size: 0.875rem;
+  list-style: none;
+  padding-left: 0;
+}
+
+.step-outline li {
+  margin-top: 0.35rem;
+}
+
+.step-outline button {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: #7a7a7a;
+  cursor: pointer;
+  text-align: left;
+}
+
+.step-outline button:hover {
+  color: #2a2a2a;
+}
+
+.step-outline button.is-active {
+  color: #2a2a2a;
+  font-weight: 500;
+}
+
+.caption-serif {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.25rem;
+  color: #2a2a2a;
+  margin: 0;
+}
+
+.player-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.player-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sandbox-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+
+.ghost-btn {
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: #7a7a7a;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ghost-btn:hover {
+  color: #2a2a2a;
 }

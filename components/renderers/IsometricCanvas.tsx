@@ -43,29 +43,23 @@ function FloorGrid({
         .map((p) => p.join(","))
         .join(" ");
 
-      const isLight = (gx + gy) % 2 === 0;
       tiles.push(
         <polygon
           key={`floor-${gx}-${gy}`}
           points={points}
-          fill={isLight ? "#5a9e47" : "#4a8538"}
-          stroke="#3d6b32"
-          strokeWidth={0.6}
+          fill={(gx + gy) % 2 === 0 ? "#f0efec" : "#e8e6e1"}
+          stroke="#dddcd8"
+          strokeWidth={0.5}
         />
       );
-      if (isLight) {
-        tiles.push(
-          <circle key={`dot-${gx}-${gy}`} cx={cx} cy={cy} r={1.2} fill="#6bb85a" opacity={0.35} />
-        );
-      }
     }
   }
   return <g aria-hidden="true">{tiles}</g>;
 }
 
-function IsometricCrate({ el, sortKey }: { el: VizElement; sortKey: number }) {
-  const isWall = el.value === "·" || el.kind === "cell" && el.z && el.z >= 5;
-  const h = isWall ? 6 : heightUnits(el.value, el.z ?? 2);
+function IsometricBlock({ el, sortKey }: { el: VizElement; sortKey: number }) {
+  const isWall = el.value === "·";
+  const h = isWall ? 5 : heightUnits(el.value, el.z ?? 2);
   const { x: sx, y: sy } = gridToScreen(el.x, el.y, h);
   const extrude = h * BLOCK_H;
   const colors = colorsFor(el.highlight, el.value);
@@ -104,57 +98,24 @@ function IsometricCrate({ el, sortKey }: { el: VizElement; sortKey: number }) {
   return (
     <motion.g
       key={el.id}
-      initial={{ opacity: 0, scale: 0.92 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.22, ease: "easeOut" }}
+      initial={{ opacity: 0.85 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
       style={{ zIndex: sortKey }}
     >
       {isSelected && colors.glow && (
-        <ellipse
-          cx={sx}
-          cy={sy + TILE_H / 2}
-          rx={w * 0.55}
-          ry={TILE_H * 0.5}
-          fill={colors.glow}
-          opacity={0.9}
-        />
+        <ellipse cx={sx} cy={sy + TILE_H / 2} rx={w * 0.5} ry={TILE_H * 0.45} fill={colors.glow} />
       )}
-      <polygon points={left} fill={colors.left} stroke={colors.stroke} strokeWidth={1.5} />
-      <polygon points={right} fill={colors.right} stroke={colors.stroke} strokeWidth={1.5} />
-      <polygon points={top} fill={colors.top} stroke={colors.stroke} strokeWidth={2} />
-      {/* Crate lid lines */}
-      {!isWall && (
-        <>
-          <line
-            x1={sx - w / 4}
-            y1={topY + TILE_H / 4}
-            x2={sx + w / 4}
-            y2={topY + TILE_H * 0.75}
-            stroke={colors.stroke}
-            strokeWidth={0.75}
-            opacity={0.35}
-          />
-          <line
-            x1={sx + w / 4}
-            y1={topY + TILE_H / 4}
-            x2={sx - w / 4}
-            y2={topY + TILE_H * 0.75}
-            stroke={colors.stroke}
-            strokeWidth={0.75}
-            opacity={0.35}
-          />
-        </>
-      )}
+      <polygon points={left} fill={colors.left} stroke={colors.stroke} strokeWidth={1} />
+      <polygon points={right} fill={colors.right} stroke={colors.stroke} strokeWidth={1} />
+      <polygon points={top} fill={colors.top} stroke={colors.stroke} strokeWidth={1.25} />
       {el.value !== undefined && el.value !== "" && el.value !== "·" && (
         <text
           x={sx}
-          y={topY + TILE_H / 2 + 5}
+          y={topY + TILE_H / 2 + 4}
           textAnchor="middle"
           fill={colors.text}
-          stroke="#000"
-          strokeWidth={0.4}
-          paintOrder="stroke"
-          style={{ fontSize: 14, fontWeight: 800, fontFamily: "var(--font-sans)" }}
+          style={{ fontSize: 13, fontWeight: 500, fontFamily: "var(--font-raleway), sans-serif" }}
         >
           {el.value}
         </text>
@@ -164,8 +125,8 @@ function IsometricCrate({ el, sortKey }: { el: VizElement; sortKey: number }) {
           x={sx}
           y={sy + TILE_H + 14}
           textAnchor="middle"
-          fill="#ffe082"
-          style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em" }}
+          fill="#7a7a7a"
+          style={{ fontSize: 10, fontWeight: 500, letterSpacing: "0.06em" }}
         >
           {el.label}
         </text>
@@ -174,7 +135,7 @@ function IsometricCrate({ el, sortKey }: { el: VizElement; sortKey: number }) {
   );
 }
 
-function ConveyorBelt({
+function Connector({
   x1,
   y1,
   x2,
@@ -187,40 +148,19 @@ function ConveyorBelt({
   y2: number;
   active: boolean;
 }) {
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const len = Math.hypot(dx, dy) || 1;
-  const nx = (-dy / len) * 4;
-  const ny = (dx / len) * 4;
-
   return (
     <g>
-      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#3a3a3a" strokeWidth={10} strokeLinecap="round" />
       <line
         x1={x1}
         y1={y1}
         x2={x2}
         y2={y2}
-        stroke={active ? "#ffd54f" : "#9e9e9e"}
-        strokeWidth={6}
+        stroke={active ? "#3a3a3a" : "#c8c6c0"}
+        strokeWidth={active ? 2 : 1.5}
+        strokeDasharray={active ? undefined : "5 4"}
         strokeLinecap="round"
       />
-      {[0.25, 0.5, 0.75].map((t) => (
-        <line
-          key={t}
-          x1={x1 + dx * t + nx}
-          y1={y1 + dy * t + ny}
-          x2={x1 + dx * t - nx}
-          y2={y1 + dy * t - ny}
-          stroke="#5d4037"
-          strokeWidth={1.5}
-          opacity={0.6}
-        />
-      ))}
-      <polygon
-        points={`${x2},${y2} ${x2 - dx / len * 10 + nx},${y2 - dy / len * 10 + ny} ${x2 - dx / len * 10 - nx},${y2 - dy / len * 10 - ny}`}
-        fill={active ? "#ffb300" : "#757575"}
-      />
+      <circle cx={x2} cy={y2} r={3} fill={active ? "#3a3a3a" : "#d4d2cc"} />
     </g>
   );
 }
@@ -238,12 +178,12 @@ export function IsometricCanvas({ elements, edges = [] }: Props) {
 
   return (
     <div className="viz-stage">
-      <div className="viz-stage__label">Factory floor — isometric</div>
+      <div className="viz-stage__label">Isometric view</div>
       <svg
         viewBox={`${vb.minX} ${vb.minY} ${vb.width} ${vb.height}`}
         className="viz-stage__canvas"
         role="img"
-        aria-label="Isometric factory visualization"
+        aria-label="Isometric visualization"
       >
         <FloorGrid
           minX={vb.floorMinX}
@@ -260,7 +200,7 @@ export function IsometricCanvas({ elements, edges = [] }: Props) {
           const a = gridToScreen(from.x, from.y, fh + 0.5);
           const b = gridToScreen(to.x, to.y, th + 0.5);
           return (
-            <ConveyorBelt
+            <Connector
               key={`${edge.from}-${edge.to}`}
               x1={a.x}
               y1={a.y}
@@ -271,7 +211,7 @@ export function IsometricCanvas({ elements, edges = [] }: Props) {
           );
         })}
         {sorted.map((el, i) => (
-          <IsometricCrate key={el.id} el={el} sortKey={i} />
+          <IsometricBlock key={el.id} el={el} sortKey={i} />
         ))}
       </svg>
     </div>

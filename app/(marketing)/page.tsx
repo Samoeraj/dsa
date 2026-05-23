@@ -1,92 +1,65 @@
 import Link from "next/link";
 import { LESSONS } from "@/lib/lessons";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const TRACKS = [
   {
     id: "foundations" as const,
-    title: "Production line A",
-    description: "Arrays, belts, stacks, queues, sorting.",
+    title: "Foundations",
+    description: "Arrays, linked lists, stacks, queues, and sorting.",
   },
   {
     id: "trees" as const,
-    title: "Production line B",
-    description: "Trees and grid logistics (BFS).",
+    title: "Trees & graphs",
+    description: "Binary trees and breadth-first search.",
   },
-];
-
-const LEGEND = [
-  { label: "Selected", color: "#fff59d" },
-  { label: "Comparing", color: "#ff8a65" },
-  { label: "Sorted", color: "#81c784" },
-  { label: "Belt link", color: "#ffd54f" },
 ];
 
 export default function HomePage() {
   return (
-    <div className="space-y-12">
-      <section className="space-y-5">
-        <Badge>Beginners welcome</Badge>
-        <h1 className="text-4xl font-black leading-tight tracking-tight text-fact-text md:text-5xl">
-          Build intuition
+    <div style={{ display: "flex", flexDirection: "column", gap: "4rem" }}>
+      <section style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        <p className="label-caps">For beginners</p>
+        <h1 className="heading-display">
+          Data structures,
           <br />
-          <span className="text-fact-orange">on the factory floor.</span>
+          seen in three dimensions.
         </h1>
-        <p className="max-w-xl text-lg leading-relaxed text-fact-muted">
-          Data structures as crates, pointers as conveyor belts, algorithms as production steps —
-          isometric, playful, Factorio-inspired.
+        <p className="text-lead">
+          Step through algorithms on an isometric board. Clear, quiet, and built for understanding.
         </p>
-        <div className="flex flex-wrap gap-3">
-          <Link href="/learn/array" className="inline-flex h-10 items-center rounded-sm border-2 border-[#c46a10] bg-gradient-to-b from-fact-orange to-[#c46a10] px-5 text-sm font-bold text-[#1a1000] no-underline shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:brightness-110">
-            Start: Arrays
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", paddingTop: "0.5rem" }}>
+          <Link href="/learn/array" className="btn btn-primary">
+            Begin with arrays
           </Link>
-          <Link href="/learn/bfs" className="inline-flex h-10 items-center rounded-sm border-2 border-fact-border-hi bg-fact-panel-light px-5 text-sm font-bold text-fact-text no-underline hover:border-fact-copper">
-            Grid BFS
+          <Link href="/learn/bfs" className="btn btn-secondary">
+            Breadth-first search
           </Link>
         </div>
       </section>
 
-      <section className="panel">
-        <div className="panel-header">Signal legend</div>
-        <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-4">
-          {LEGEND.map((item) => (
-            <div key={item.label} className="flex items-center gap-2">
-              <span
-                className="h-5 w-5 rounded-sm border-2 border-black/30 shadow-inner"
-                style={{ backgroundColor: item.color }}
-              />
-              <span className="text-xs font-semibold text-fact-muted">{item.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {TRACKS.map((track, trackIdx) => {
+      {TRACKS.map((track) => {
         const lessons = LESSONS.filter((l) => l.track === track.id).sort((a, b) => a.order - b.order);
         return (
-          <section key={track.id} className="space-y-4">
+          <section key={track.id} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             <div>
-              <p className="font-mono text-xs font-bold text-fact-copper">LINE {trackIdx + 1}</p>
-              <h2 className="text-2xl font-black text-fact-text">{track.title}</h2>
-              <p className="text-fact-muted">{track.description}</p>
+              <h2 className="heading-section">{track.title}</h2>
+              <p className="text-muted" style={{ marginTop: "0.35rem" }}>
+                {track.description}
+              </p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="lesson-list">
               {lessons.map((lesson) => (
-                <Card key={lesson.slug}>
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-2">
-                      <CardTitle>{lesson.title}</CardTitle>
-                      {lesson.slug === "array" && <Badge>First</Badge>}
-                    </div>
-                    <CardDescription>{lesson.learningGoals[0]}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Link href={`/learn/${lesson.slug}`} className="text-sm font-bold text-fact-copper no-underline hover:text-fact-orange">
-                      Open blueprint →
-                    </Link>
-                  </CardContent>
-                </Card>
+                <div key={lesson.slug} className="lesson-row">
+                  <div>
+                    <h3 className="lesson-row__title">{lesson.title}</h3>
+                    <p className="text-muted" style={{ marginTop: "0.2rem", fontSize: "0.875rem" }}>
+                      {lesson.learningGoals[0]}
+                    </p>
+                  </div>
+                  <Link href={`/learn/${lesson.slug}`} className="lesson-row__link">
+                    Open lesson
+                  </Link>
+                </div>
               ))}
             </div>
           </section>

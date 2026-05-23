@@ -2,16 +2,15 @@ import { cn } from "@/lib/utils";
 
 export function Badge({
   className,
-  variant = "default",
+  variant = "muted",
   ...props
-}: React.HTMLAttributes<HTMLSpanElement> & { variant?: "default" | "copper" | "muted" }) {
+}: React.HTMLAttributes<HTMLSpanElement> & { variant?: "muted" | "ink" }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-sm border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-        variant === "default" && "border-fact-orange bg-[#4a3a20] text-fact-orange",
-        variant === "copper" && "border-fact-copper bg-fact-panel-light text-fact-copper",
-        variant === "muted" && "border-fact-border bg-fact-panel text-fact-muted",
+        "inline-flex items-center text-[11px] font-medium uppercase tracking-widest",
+        variant === "muted" && "text-muted",
+        variant === "ink" && "text-ink",
         className
       )}
       {...props}
