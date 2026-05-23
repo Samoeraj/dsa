@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const lesson = getLesson(slug);
   if (!lesson) return { title: "Not found" };
-  return { title: `${lesson.title} — DSA` };
+  return { title: `${lesson.title} — DSA Factory` };
 }
 
 export default async function LessonPage({ params, searchParams }: PageProps) {
@@ -34,26 +34,33 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
   const next = ordered[idx + 1];
 
   return (
-    <article className="space-y-10">
-      <header className="space-y-4 border-b border-[#d2d2d7] pb-8">
-        <Badge variant="muted">
-          {lesson.track === "foundations" ? "Foundations" : "Trees & graphs"}
-        </Badge>
-        <h1 className="text-3xl font-semibold tracking-tight text-[#1d1d1f]">{lesson.title}</h1>
-        <ul className="space-y-1 text-sm text-[#86868b]">
-          {lesson.learningGoals.map((g) => (
-            <li key={g}>— {g}</li>
-          ))}
-        </ul>
+    <article className="space-y-8">
+      <header className="panel overflow-hidden">
+        <div className="panel-header">Blueprint</div>
+        <div className="space-y-3 p-4">
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="muted">
+              {lesson.track === "foundations" ? "Line A" : "Line B"}
+            </Badge>
+          </div>
+          <h1 className="text-3xl font-black text-fact-text">{lesson.title}</h1>
+          <ul className="space-y-1 text-sm text-fact-muted">
+            {lesson.learningGoals.map((g) => (
+              <li key={g}>▸ {g}</li>
+            ))}
+          </ul>
+        </div>
       </header>
 
-      <section className="space-y-3">
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest text-[#86868b]">Before</h2>
-        {lesson.intro.map((p) => (
-          <p key={p} className="leading-relaxed text-[#1d1d1f]">
-            {p}
-          </p>
-        ))}
+      <section className="panel">
+        <div className="panel-header">Briefing</div>
+        <div className="space-y-3 p-4 text-fact-text">
+          {lesson.intro.map((p) => (
+            <p key={p} className="leading-relaxed">
+              {p}
+            </p>
+          ))}
+        </div>
       </section>
 
       <LessonPlayer
@@ -63,21 +70,23 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         initialLength={shared.length}
       />
 
-      <section className="space-y-3 border-t border-[#d2d2d7] pt-8">
-        <h2 className="text-[11px] font-semibold uppercase tracking-widest text-[#86868b]">After</h2>
-        {lesson.outro.map((p) => (
-          <p key={p} className="leading-relaxed text-[#86868b]">
-            {p}
-          </p>
-        ))}
+      <section className="panel">
+        <div className="panel-header">Debrief</div>
+        <div className="space-y-3 p-4 text-fact-muted">
+          {lesson.outro.map((p) => (
+            <p key={p} className="leading-relaxed">
+              {p}
+            </p>
+          ))}
+        </div>
       </section>
 
-      <footer className="flex flex-wrap gap-4 border-t border-[#d2d2d7] pt-8 text-sm">
-        <Link href="/" className="text-[#86868b] no-underline hover:text-[#1d1d1f]">
-          ← Index
+      <footer className="flex flex-wrap gap-4 border-t-2 border-fact-border pt-6 text-sm font-semibold">
+        <Link href="/" className="text-fact-muted no-underline hover:text-fact-copper">
+          ← Blueprints
         </Link>
         {next && (
-          <Link href={`/learn/${next.slug}`} className="font-medium text-[#1d1d1f] no-underline hover:opacity-70">
+          <Link href={`/learn/${next.slug}`} className="text-fact-copper no-underline hover:text-fact-orange">
             Next: {next.title} →
           </Link>
         )}

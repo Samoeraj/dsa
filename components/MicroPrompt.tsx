@@ -21,32 +21,34 @@ export function MicroPrompt({ prompt, onAnswered }: Props) {
   };
 
   return (
-    <div className="rounded-xl border border-[#d2d2d7] bg-white p-5">
-      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#86868b]">Check</p>
-      <p className="mb-4 text-base font-medium text-[#1d1d1f]">{prompt.question}</p>
-      <div className="flex flex-col gap-2" role="group" aria-label="Answer choices">
-        {prompt.options.map((opt, i) => (
-          <Button
-            key={opt}
-            variant={selected === i ? (i === prompt.correctIndex ? "default" : "secondary") : "secondary"}
-            className="w-full justify-start rounded-lg"
-            onClick={() => handleSelect(i)}
-            disabled={selected === prompt.correctIndex}
-          >
-            {opt}
-          </Button>
-        ))}
+    <div className="panel">
+      <div className="panel-header">Quality check</div>
+      <div className="space-y-3 p-4">
+        <p className="font-semibold text-fact-text">{prompt.question}</p>
+        <div className="flex flex-col gap-2" role="group" aria-label="Answer choices">
+          {prompt.options.map((opt, i) => (
+            <Button
+              key={opt}
+              variant={selected === i ? (i === prompt.correctIndex ? "default" : "secondary") : "secondary"}
+              className="w-full justify-start"
+              onClick={() => handleSelect(i)}
+              disabled={selected === prompt.correctIndex}
+            >
+              {opt}
+            </Button>
+          ))}
+        </div>
+        {showHint && selected !== prompt.correctIndex && (
+          <p className="text-sm text-fact-copper" role="status">
+            Hint: {prompt.hint}
+          </p>
+        )}
+        {selected === prompt.correctIndex && (
+          <p className="text-sm font-bold text-[#81c784]" role="status">
+            Approved — continue.
+          </p>
+        )}
       </div>
-      {showHint && selected !== prompt.correctIndex && (
-        <p className="mt-3 text-sm text-[#86868b]" role="status">
-          {prompt.hint}
-        </p>
-      )}
-      {selected === prompt.correctIndex && (
-        <p className="mt-3 text-sm font-medium text-[#1d1d1f]" role="status">
-          Correct.
-        </p>
-      )}
     </div>
   );
 }

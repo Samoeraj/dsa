@@ -6,101 +6,84 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 const TRACKS = [
   {
     id: "foundations" as const,
-    title: "Foundations",
-    description: "Arrays, lists, stacks, queues, sorting.",
+    title: "Production line A",
+    description: "Arrays, belts, stacks, queues, sorting.",
   },
   {
     id: "trees" as const,
-    title: "Trees & graphs",
-    description: "Binary trees and breadth-first search on grids.",
+    title: "Production line B",
+    description: "Trees and grid logistics (BFS).",
   },
 ];
 
 const LEGEND = [
-  { label: "Active", role: "current" as const },
-  { label: "Compare", role: "compare" as const },
-  { label: "Done", role: "settled" as const },
-  { label: "Link", role: "pointer" as const },
+  { label: "Selected", color: "#fff59d" },
+  { label: "Comparing", color: "#ff8a65" },
+  { label: "Sorted", color: "#81c784" },
+  { label: "Belt link", color: "#ffd54f" },
 ];
 
 export default function HomePage() {
   return (
-    <div className="space-y-16">
-      <section className="space-y-6">
-        <Badge variant="muted">Beginners</Badge>
-        <h1 className="text-4xl font-semibold leading-[1.1] tracking-tight text-[#1d1d1f] md:text-5xl">
-          Data structures,
+    <div className="space-y-12">
+      <section className="space-y-5">
+        <Badge>Beginners welcome</Badge>
+        <h1 className="text-4xl font-black leading-tight tracking-tight text-fact-text md:text-5xl">
+          Build intuition
           <br />
-          isometric board.
+          <span className="text-fact-orange">on the factory floor.</span>
         </h1>
-        <p className="max-w-lg text-lg leading-relaxed text-[#86868b]">
-          Step through algorithms on a 3D isometric grid. Neutral, readable, no noise — just the
-          structure.
+        <p className="max-w-xl text-lg leading-relaxed text-fact-muted">
+          Data structures as crates, pointers as conveyor belts, algorithms as production steps —
+          isometric, playful, Factorio-inspired.
         </p>
-        <div className="flex flex-wrap gap-3 pt-2">
-          <Link
-            href="/learn/array"
-            className="inline-flex h-10 items-center rounded-full bg-[#1d1d1f] px-5 text-sm font-medium text-white no-underline hover:bg-[#424245]"
-          >
-            Start — Arrays
+        <div className="flex flex-wrap gap-3">
+          <Link href="/learn/array" className="inline-flex h-10 items-center rounded-sm border-2 border-[#c46a10] bg-gradient-to-b from-fact-orange to-[#c46a10] px-5 text-sm font-bold text-[#1a1000] no-underline shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:brightness-110">
+            Start: Arrays
           </Link>
-          <Link
-            href="/learn/bfs"
-            className="inline-flex h-10 items-center rounded-full border border-[#d2d2d7] bg-white px-5 text-sm font-medium text-[#1d1d1f] no-underline hover:bg-[#f5f5f7]"
-          >
-            BFS
+          <Link href="/learn/bfs" className="inline-flex h-10 items-center rounded-sm border-2 border-fact-border-hi bg-fact-panel-light px-5 text-sm font-bold text-fact-text no-underline hover:border-fact-copper">
+            Grid BFS
           </Link>
         </div>
       </section>
 
-      <section className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-[#d2d2d7] bg-[#d2d2d7] sm:grid-cols-4">
-        {LEGEND.map((item) => (
-          <div key={item.label} className="flex items-center gap-3 bg-white px-4 py-3">
-            <span
-              className="h-3 w-3 rounded-sm border border-[#c7c7cc]"
-              style={{
-                background:
-                  item.role === "current"
-                    ? "#1d1d1f"
-                    : item.role === "compare"
-                      ? "#aeaeb2"
-                      : item.role === "settled"
-                        ? "#fff"
-                        : "#ff9500",
-              }}
-            />
-            <span className="text-xs font-medium text-[#86868b]">{item.label}</span>
-          </div>
-        ))}
+      <section className="panel">
+        <div className="panel-header">Signal legend</div>
+        <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-4">
+          {LEGEND.map((item) => (
+            <div key={item.label} className="flex items-center gap-2">
+              <span
+                className="h-5 w-5 rounded-sm border-2 border-black/30 shadow-inner"
+                style={{ backgroundColor: item.color }}
+              />
+              <span className="text-xs font-semibold text-fact-muted">{item.label}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
-      {TRACKS.map((track) => {
+      {TRACKS.map((track, trackIdx) => {
         const lessons = LESSONS.filter((l) => l.track === track.id).sort((a, b) => a.order - b.order);
         return (
-          <section key={track.id} className="space-y-5">
+          <section key={track.id} className="space-y-4">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-[#86868b]">
-                {track.id === "foundations" ? "01" : "02"}
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#1d1d1f]">{track.title}</h2>
-              <p className="mt-1 text-[#86868b]">{track.description}</p>
+              <p className="font-mono text-xs font-bold text-fact-copper">LINE {trackIdx + 1}</p>
+              <h2 className="text-2xl font-black text-fact-text">{track.title}</h2>
+              <p className="text-fact-muted">{track.description}</p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {lessons.map((lesson) => (
-                <Card key={lesson.slug} className="transition hover:border-[#aeaeb2]">
+                <Card key={lesson.slug}>
                   <CardHeader>
                     <div className="flex items-start justify-between gap-2">
                       <CardTitle>{lesson.title}</CardTitle>
-                      {lesson.slug === "array" && <Badge variant="accent">Start</Badge>}
+                      {lesson.slug === "array" && <Badge>First</Badge>}
                     </div>
                     <CardDescription>{lesson.learningGoals[0]}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Link
-                      href={`/learn/${lesson.slug}`}
-                      className="text-sm font-medium text-[#1d1d1f] no-underline hover:opacity-70"
-                    >
-                      Open →
+                    <Link href={`/learn/${lesson.slug}`} className="text-sm font-bold text-fact-copper no-underline hover:text-fact-orange">
+                      Open blueprint →
                     </Link>
                   </CardContent>
                 </Card>

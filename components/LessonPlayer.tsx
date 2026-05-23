@@ -7,7 +7,6 @@ import { getSandboxSteps } from "@/lib/lessons";
 import { getLessonProgress, saveLessonProgress } from "@/lib/progress";
 import { buildShareUrl } from "@/lib/share-params";
 import { cn } from "@/lib/utils";
-import { FlatSchematic } from "./renderers/FlatSchematic";
 import { IsometricCanvas } from "./renderers/IsometricCanvas";
 import { MicroPrompt } from "./MicroPrompt";
 import { Badge } from "./ui/badge";
@@ -144,7 +143,7 @@ export function LessonPlayer({
           <Badge variant="muted">
             {stepIndex + 1} / {steps.length}
           </Badge>
-          {getLessonProgress(lesson.slug)?.completed && <Badge variant="accent">Done</Badge>}
+          {getLessonProgress(lesson.slug)?.completed && <Badge variant="copper">Complete</Badge>}
         </div>
       </div>
 
@@ -152,7 +151,7 @@ export function LessonPlayer({
         <Card>
           <CardContent className="flex flex-wrap items-end gap-6 pt-4">
             {"minLength" in lesson.sandbox && (
-              <label className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-wider text-[#86868b]">
+              <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-wider text-fact-muted">
                 Size
                 <input
                   type="range"
@@ -165,11 +164,11 @@ export function LessonPlayer({
                   }}
                   className="w-40"
                 />
-                <span className="font-mono text-sm normal-case tracking-normal text-[#1d1d1f]">{sandboxLength}</span>
+                <span className="font-mono text-sm font-bold normal-case tracking-normal text-fact-orange">{sandboxLength}</span>
               </label>
             )}
             {"presets" in lesson.sandbox && (
-              <label className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-wider text-[#86868b]">
+              <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-wider text-fact-muted">
                 Preset
                 <select
                   value={sandboxPreset}
@@ -177,7 +176,7 @@ export function LessonPlayer({
                     setSandboxPreset(e.target.value);
                     setStepIndex(0);
                   }}
-                  className="rounded-lg border border-[#d2d2d7] bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-[#1d1d1f]"
+                  className="rounded-sm border-2 border-fact-border bg-fact-panel-light px-3 py-2 text-sm font-semibold normal-case tracking-normal text-fact-text"
                 >
                   {lesson.sandbox.presets.map((p) => (
                     <option key={p} value={p}>
@@ -188,7 +187,7 @@ export function LessonPlayer({
               </label>
             )}
             {"maxItems" in lesson.sandbox && (
-              <label className="flex flex-col gap-2 text-xs font-semibold uppercase tracking-wider text-[#86868b]">
+              <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-wider text-fact-muted">
                 Items
                 <input
                   type="range"
@@ -209,18 +208,9 @@ export function LessonPlayer({
 
       <IsometricCanvas elements={step.elements} edges={step.edges} />
 
-      <details className="group rounded-xl border border-[#d2d2d7] bg-[#f5f5f7] lg:hidden">
-        <summary className="cursor-pointer px-4 py-3 text-[11px] font-semibold uppercase tracking-widest text-[#86868b]">
-          Schematic (flat)
-        </summary>
-        <div className="border-t border-[#d2d2d7] bg-white">
-          <FlatSchematic elements={step.elements} edges={step.edges} />
-        </div>
-      </details>
-
-      <div aria-live="polite" aria-atomic="true" className="space-y-2 border-t border-[#d2d2d7] pt-6">
-        <p className="text-xl font-semibold tracking-tight text-[#1d1d1f]">{step.caption}</p>
-        <p className="text-sm leading-relaxed text-[#86868b]">{step.description}</p>
+      <div aria-live="polite" aria-atomic="true" className="panel space-y-2 p-4">
+        <p className="text-lg font-bold text-fact-text">{step.caption}</p>
+        <p className="text-sm leading-relaxed text-fact-muted">{step.description}</p>
       </div>
 
       {step.microPrompt && !promptCleared && (
@@ -258,15 +248,15 @@ export function LessonPlayer({
         </Button>
       </div>
 
-      <ol className="mt-8 space-y-2 border-t border-[#d2d2d7] pt-6 text-sm">
-        <li className="text-[11px] font-semibold uppercase tracking-widest text-[#86868b]">Outline</li>
+      <ol className="panel mt-4 space-y-2 p-4 text-sm">
+        <li className="panel-header -mx-4 -mt-4 mb-2">Production log</li>
         {steps.map((s, i) => (
           <li key={s.id}>
             <button
               type="button"
               className={cn(
-                "text-left text-[#86868b] hover:text-[#1d1d1f]",
-                i === stepIndex && "font-medium text-[#1d1d1f]"
+                "text-left text-fact-muted hover:text-fact-copper",
+                i === stepIndex && "font-bold text-fact-orange"
               )}
               onClick={() => setStepIndex(i)}
             >

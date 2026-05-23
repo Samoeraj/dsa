@@ -1,95 +1,144 @@
 @import "tailwindcss";
 
+@source "../app/**/*.{js,ts,jsx,tsx}";
+@source "../components/**/*.{js,ts,jsx,tsx}";
+@source "../lib/**/*.{js,ts}";
+
 @theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "SF Mono", ui-monospace, monospace;
-  --color-bg: #fbfbfd;
-  --color-surface: #ffffff;
-  --color-border: #d2d2d7;
-  --color-text: #1d1d1f;
-  --color-muted: #86868b;
-  --color-accent: #d71921;
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Consolas", "SF Mono", ui-monospace, monospace;
+
+  --color-fact-bg: #1e1e1e;
+  --color-fact-panel: #2d2d2d;
+  --color-fact-panel-light: #383838;
+  --color-fact-border: #4a4a4a;
+  --color-fact-border-hi: #6e6e6e;
+  --color-fact-text: #e8e8e8;
+  --color-fact-muted: #9e9e9e;
+  --color-fact-copper: #e39423;
+  --color-fact-orange: #f28b1a;
+  --color-fact-grass: #4a8f3a;
+  --color-fact-sky-top: #5b8cb8;
+  --color-fact-sky-bot: #3d5f45;
+}
+
+html {
+  color-scheme: dark;
 }
 
 body {
-  @apply min-h-screen font-sans antialiased;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--color-fact-bg);
+  color: var(--color-fact-text);
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(91, 140, 184, 0.25), transparent 50%),
+    linear-gradient(180deg, #252525 0%, var(--color-fact-bg) 40%);
 }
 
 a {
-  color: var(--color-text);
+  color: var(--color-fact-copper);
   text-decoration: none;
 }
 
 a:hover {
-  opacity: 0.72;
+  color: var(--color-fact-orange);
 }
 
 ::selection {
-  background: #1d1d1f;
-  color: #fff;
+  background: var(--color-fact-orange);
+  color: #1a1a1a;
 }
 
-/* Isometric stage — product-display frame */
+/* Factorio-style factory floor viewport */
 .viz-stage {
   position: relative;
   width: 100%;
-  min-height: 28rem;
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  background: linear-gradient(180deg, #ffffff 0%, #f5f5f7 100%);
+  min-height: 32rem;
+  border: 2px solid var(--color-fact-border);
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--color-fact-sky-top) 0%, var(--color-fact-sky-bot) 35%, #2d4a28 36%);
   overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.45);
 }
 
 .viz-stage__label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  gap: 0.625rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-muted);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+  color: var(--color-fact-text);
+  border-bottom: 2px solid var(--color-fact-border);
+  background: linear-gradient(180deg, #3d3d3d 0%, var(--color-fact-panel) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.viz-stage__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-accent);
+.viz-stage__label::before {
+  content: "";
+  width: 4px;
+  height: 1rem;
+  background: var(--color-fact-orange);
+  border-radius: 1px;
 }
 
 .viz-stage__canvas {
   display: block;
   width: 100%;
-  min-height: 24rem;
-  padding: 1rem;
+  min-height: 28rem;
+  padding: 0.5rem;
 }
 
-/* Segmented control (TE / Nothing style) */
+/* Factorio tab control */
 .segmented {
   display: inline-flex;
-  padding: 3px;
-  border-radius: 10px;
-  background: #e8e8ed;
-  border: 1px solid var(--color-border);
+  padding: 2px;
+  border-radius: 4px;
+  background: #1a1a1a;
+  border: 2px solid var(--color-fact-border);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .segmented button {
-  padding: 0.4rem 1rem;
+  padding: 0.45rem 1.1rem;
   font-size: 0.8125rem;
-  font-weight: 500;
-  border-radius: 8px;
-  color: var(--color-muted);
-  transition: background 0.15s, color 0.15s;
+  font-weight: 600;
+  border-radius: 2px;
+  color: var(--color-fact-muted);
+  transition: background 0.12s, color 0.12s;
 }
 
-.segmented button[aria-pressed="true"] {
-  background: var(--color-surface);
-  color: var(--color-text);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+.segmented button:hover {
+  color: var(--color-fact-text);
+}
+
+.segmented button[aria-selected="true"] {
+  background: linear-gradient(180deg, #5a5a5a 0%, #454545 100%);
+  color: var(--color-fact-text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Industrial panel */
+.panel {
+  border: 2px solid var(--color-fact-border);
+  border-radius: 4px;
+  background: var(--color-fact-panel);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.panel-header {
+  padding: 0.5rem 0.875rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-fact-muted);
+  border-bottom: 2px solid var(--color-fact-border);
+  background: #333;
 }
