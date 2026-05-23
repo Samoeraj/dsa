@@ -11,17 +11,16 @@ type Props = {
 
 export function FlatSchematic({ elements, edges = [] }: Props) {
   const isGrid = elements.some((e) => e.kind === "cell");
-  const byId = Object.fromEntries(elements.map((e) => [e.id, e]));
 
   if (isGrid) {
     const maxX = Math.max(...elements.map((e) => e.x)) + 1;
     const maxY = Math.max(...elements.map((e) => e.y)) + 1;
     return (
       <div
-        className="mx-auto grid gap-1 p-2"
-        style={{ gridTemplateColumns: `repeat(${maxX}, minmax(0, 2.5rem))` }}
+        className="mx-auto grid gap-1 p-4"
+        style={{ gridTemplateColumns: `repeat(${maxX}, minmax(0, 2.75rem))` }}
         role="img"
-        aria-hidden="true"
+        aria-label="Simplified grid view"
       >
         {Array.from({ length: maxY }, (_, y) =>
           Array.from({ length: maxX }, (_, x) => {
@@ -32,8 +31,8 @@ export function FlatSchematic({ elements, edges = [] }: Props) {
               <motion.div
                 key={el.id}
                 layout
-                className="flex h-10 w-10 items-center justify-center rounded-lg border-2 text-xs font-bold"
-                style={{ backgroundColor: c.fill, borderColor: c.stroke }}
+                className="flex h-11 w-11 items-center justify-center rounded-md border text-xs font-semibold"
+                style={{ backgroundColor: c.top, borderColor: c.stroke, color: c.text }}
               >
                 {el.value || ""}
               </motion.div>
@@ -45,7 +44,7 @@ export function FlatSchematic({ elements, edges = [] }: Props) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4" role="img" aria-hidden="true">
+    <div className="flex flex-col items-center gap-3 p-4" role="img" aria-label="Simplified schematic view">
       <div className="flex flex-wrap items-center justify-center gap-2">
         {elements
           .filter((e) => e.kind !== "cell")
@@ -56,37 +55,19 @@ export function FlatSchematic({ elements, edges = [] }: Props) {
               <motion.div
                 key={el.id}
                 layout
-                className="flex h-12 min-w-12 items-center justify-center rounded-xl border-2 px-2 text-sm font-bold shadow-sm"
-                style={{ backgroundColor: c.fill, borderColor: c.stroke }}
+                className="flex h-11 min-w-11 items-center justify-center rounded-md border px-2 text-sm font-semibold"
+                style={{ backgroundColor: c.top, borderColor: c.stroke, color: c.text }}
               >
                 {el.value}
-                {el.label && <span className="ml-1 text-[10px] text-violet-700">{el.label}</span>}
               </motion.div>
             );
           })}
       </div>
       {edges.length > 0 && (
-        <p className="text-xs text-slate-500">{edges.length} pointer link(s) — see isometric view on larger screens</p>
+        <p className="text-[11px] font-medium uppercase tracking-widest text-[#86868b]">
+          {edges.length} link{edges.length > 1 ? "s" : ""}
+        </p>
       )}
-      <svg className="h-8 w-full max-w-md overflow-visible" aria-hidden="true">
-        {edges.map((edge) => {
-          const from = byId[edge.from];
-          const to = byId[edge.to];
-          if (!from || !to) return null;
-          const c = colorsFor(edge.highlight ?? "pointer");
-          return (
-            <line
-              key={`${edge.from}-${edge.to}`}
-              x1={`${(from.x + 1) * 10}%`}
-              y1="50%"
-              x2={`${(to.x + 1) * 10}%`}
-              y2="50%"
-              stroke={c.stroke}
-              strokeWidth={2}
-            />
-          );
-        })}
-      </svg>
     </div>
   );
 }

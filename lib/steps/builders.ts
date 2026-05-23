@@ -1,3 +1,4 @@
+import { heightUnits } from "../isometric";
 import type { LessonStep, VizEdge, VizElement } from "../types";
 
 export function blockRow(
@@ -9,7 +10,7 @@ export function blockRow(
     kind: "block",
     x: index,
     y: 0,
-    z: Math.max(1, Math.min(6, Math.round(value / 3))),
+    z: heightUnits(value),
     value,
     highlight: highlights[index],
   }));
@@ -24,7 +25,7 @@ export function linkedNodes(
     kind: "node",
     x: index * 2,
     y: 0,
-    z: 2,
+    z: 4,
     value,
     label: index === 0 ? "head" : undefined,
     highlight: highlights[index],
@@ -56,8 +57,8 @@ export function gridCells(
         kind: "cell",
         x,
         y,
-        z: isWall ? 3 : 1,
-        value: isWall ? "" : labels[key] ?? "",
+        z: isWall ? 5 : 2,
+        value: isWall ? "·" : labels[key] ?? "",
         highlight: highlights[key],
       });
     }

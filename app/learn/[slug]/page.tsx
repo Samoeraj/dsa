@@ -17,8 +17,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const lesson = getLesson(slug);
-  if (!lesson) return { title: "Lesson not found" };
-  return { title: `${lesson.title} — DSA Diorama` };
+  if (!lesson) return { title: "Not found" };
+  return { title: `${lesson.title} — DSA` };
 }
 
 export default async function LessonPage({ params, searchParams }: PageProps) {
@@ -34,23 +34,23 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
   const next = ordered[idx + 1];
 
   return (
-    <article className="space-y-8">
-      <header className="space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="muted">{lesson.track === "foundations" ? "Foundations" : "Trees & graphs"}</Badge>
-        </div>
-        <h1 className="text-3xl font-extrabold text-slate-900">{lesson.title}</h1>
-        <ul className="list-inside list-disc text-slate-600">
+    <article className="space-y-10">
+      <header className="space-y-4 border-b border-[#d2d2d7] pb-8">
+        <Badge variant="muted">
+          {lesson.track === "foundations" ? "Foundations" : "Trees & graphs"}
+        </Badge>
+        <h1 className="text-3xl font-semibold tracking-tight text-[#1d1d1f]">{lesson.title}</h1>
+        <ul className="space-y-1 text-sm text-[#86868b]">
           {lesson.learningGoals.map((g) => (
-            <li key={g}>{g}</li>
+            <li key={g}>— {g}</li>
           ))}
         </ul>
       </header>
 
-      <section className="prose prose-slate max-w-none rounded-2xl border border-violet-100 bg-white/80 p-6">
-        <h2 className="mt-0 text-lg font-bold text-violet-900">Before you play</h2>
+      <section className="space-y-3">
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest text-[#86868b]">Before</h2>
         {lesson.intro.map((p) => (
-          <p key={p} className="text-slate-700">
+          <p key={p} className="leading-relaxed text-[#1d1d1f]">
             {p}
           </p>
         ))}
@@ -63,22 +63,22 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         initialLength={shared.length}
       />
 
-      <section className="prose prose-slate max-w-none rounded-2xl border border-emerald-100 bg-emerald-50/50 p-6">
-        <h2 className="mt-0 text-lg font-bold text-emerald-900">Wrap-up</h2>
+      <section className="space-y-3 border-t border-[#d2d2d7] pt-8">
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest text-[#86868b]">After</h2>
         {lesson.outro.map((p) => (
-          <p key={p} className="text-slate-700">
+          <p key={p} className="leading-relaxed text-[#86868b]">
             {p}
           </p>
         ))}
       </section>
 
-      <footer className="flex flex-wrap gap-3 border-t border-slate-200 pt-6">
-        <Link href="/" className="text-sm font-medium text-slate-600">
-          ← All lessons
+      <footer className="flex flex-wrap gap-4 border-t border-[#d2d2d7] pt-8 text-sm">
+        <Link href="/" className="text-[#86868b] no-underline hover:text-[#1d1d1f]">
+          ← Index
         </Link>
         {next && (
-          <Link href={`/learn/${next.slug}`} className="text-sm font-semibold text-violet-700">
-            Recommended next: {next.title} →
+          <Link href={`/learn/${next.slug}`} className="font-medium text-[#1d1d1f] no-underline hover:opacity-70">
+            Next: {next.title} →
           </Link>
         )}
       </footer>

@@ -4,14 +4,14 @@ export function Badge({
   className,
   variant = "default",
   ...props
-}: React.HTMLAttributes<HTMLSpanElement> & { variant?: "default" | "success" | "muted" }) {
+}: React.HTMLAttributes<HTMLSpanElement> & { variant?: "default" | "accent" | "muted" }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
-        variant === "default" && "bg-violet-100 text-violet-800",
-        variant === "success" && "bg-emerald-100 text-emerald-800",
-        variant === "muted" && "bg-slate-100 text-slate-600",
+        "inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider",
+        variant === "default" && "bg-[#1d1d1f] text-white",
+        variant === "accent" && "bg-[#f5f5f7] text-[#1d1d1f] ring-1 ring-[#d2d2d7]",
+        variant === "muted" && "bg-[#f5f5f7] text-[#86868b]",
         className
       )}
       {...props}

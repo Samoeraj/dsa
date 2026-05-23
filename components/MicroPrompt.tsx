@@ -3,7 +3,6 @@
 import { useState } from "react";
 import type { MicroPrompt as MicroPromptType } from "@/lib/types";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 type Props = {
   prompt: MicroPromptType;
@@ -22,36 +21,32 @@ export function MicroPrompt({ prompt, onAnswered }: Props) {
   };
 
   return (
-    <Card className="border-amber-200 bg-amber-50/80">
-      <CardHeader>
-        <CardTitle className="text-base">Quick check</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <p className="font-medium text-slate-800">{prompt.question}</p>
-        <div className="flex flex-col gap-2" role="group" aria-label="Answer choices">
-          {prompt.options.map((opt, i) => (
-            <Button
-              key={opt}
-              variant={selected === i ? (i === prompt.correctIndex ? "default" : "secondary") : "secondary"}
-              className="justify-start text-left"
-              onClick={() => handleSelect(i)}
-              disabled={selected === prompt.correctIndex}
-            >
-              {opt}
-            </Button>
-          ))}
-        </div>
-        {showHint && selected !== prompt.correctIndex && (
-          <p className="text-sm text-amber-900" role="status">
-            Hint: {prompt.hint}
-          </p>
-        )}
-        {selected === prompt.correctIndex && (
-          <p className="text-sm font-medium text-emerald-700" role="status">
-            Correct — advancing to the next step.
-          </p>
-        )}
-      </CardContent>
-    </Card>
+    <div className="rounded-xl border border-[#d2d2d7] bg-white p-5">
+      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#86868b]">Check</p>
+      <p className="mb-4 text-base font-medium text-[#1d1d1f]">{prompt.question}</p>
+      <div className="flex flex-col gap-2" role="group" aria-label="Answer choices">
+        {prompt.options.map((opt, i) => (
+          <Button
+            key={opt}
+            variant={selected === i ? (i === prompt.correctIndex ? "default" : "secondary") : "secondary"}
+            className="w-full justify-start rounded-lg"
+            onClick={() => handleSelect(i)}
+            disabled={selected === prompt.correctIndex}
+          >
+            {opt}
+          </Button>
+        ))}
+      </div>
+      {showHint && selected !== prompt.correctIndex && (
+        <p className="mt-3 text-sm text-[#86868b]" role="status">
+          {prompt.hint}
+        </p>
+      )}
+      {selected === prompt.correctIndex && (
+        <p className="mt-3 text-sm font-medium text-[#1d1d1f]" role="status">
+          Correct.
+        </p>
+      )}
+    </div>
   );
 }
