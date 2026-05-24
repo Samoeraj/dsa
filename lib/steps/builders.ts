@@ -1,19 +1,26 @@
 import { heightUnits } from "../isometric";
 import type { LessonStep, VizEdge, VizElement } from "../types";
 
+export type BlockItem = number | { id: string; value: number };
+
 export function blockRow(
-  values: number[],
+  values: BlockItem[],
   highlights: Record<number, VizElement["highlight"]> = {}
 ): VizElement[] {
-  return values.map((value, index) => ({
-    id: `b-${index}`,
-    kind: "block",
-    x: index,
-    y: 0,
-    z: heightUnits(value),
-    value,
-    highlight: highlights[index],
-  }));
+  return values.map((item, index) => {
+    const isObject = typeof item === "object" && item !== null && "id" in item;
+    const id = isObject ? item.id : `b-${index}`;
+    const value = isObject ? item.value : item;
+    return {
+      id,
+      kind: "block",
+      x: index,
+      y: 0,
+      z: heightUnits(value),
+      value,
+      highlight: highlights[index],
+    };
+  });
 }
 
 export function linkedNodes(

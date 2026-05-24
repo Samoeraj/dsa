@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight, Copy, Pause, Play, RotateCcw, Share2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import type { LessonDefinition } from "@/lib/types";
 import { getSandboxSteps } from "@/lib/lessons";
 import { getLessonProgress, saveLessonProgress } from "@/lib/progress";
@@ -200,16 +201,36 @@ export function LessonPlayer({
 
       <IsometricCanvas elements={step.elements} edges={step.edges} />
 
-      <div aria-live="polite" aria-atomic="true">
-        <p className="caption-serif">{step.caption}</p>
-        <p className="text-muted" style={{ marginTop: "0.5rem", fontSize: "0.875rem", lineHeight: 1.6 }}>
-          {step.description}
-        </p>
+      <div aria-live="polite" aria-atomic="true" style={{ overflow: "hidden" }}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${mode}-${stepIndex}`}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            <p className="caption-serif">{step.caption}</p>
+            <p className="text-muted" style={{ marginTop: "0.5rem", fontSize: "0.875rem", lineHeight: 1.6 }}>
+              {step.description}
+            </p>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {step.microPrompt && !promptCleared && (
-        <MicroPrompt prompt={step.microPrompt} onAnswered={() => setPromptCleared(true)} />
-      )}
+      <AnimatePresence>
+        {step.microPrompt && !promptCleared && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, y: 20 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: 20 }}
+            transition={{ type: "spring", stiffness: 220, damping: 22 }}
+            style={{ overflow: "hidden" }}
+          >
+            <MicroPrompt prompt={step.microPrompt} onAnswered={() => setPromptCleared(true)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="controls-row">
         <button type="button" className="icon-btn" onClick={goPrev} disabled={stepIndex === 0} aria-label="Previous step">

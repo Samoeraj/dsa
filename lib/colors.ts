@@ -9,84 +9,81 @@ export type BlockFaces = {
   glow?: string;
 };
 
-/** Neutral stone tones — slight variation by value */
+/** Playful steel/container neutral tones — slight variation by value */
 const NEUTRAL_STEPS: BlockFaces[] = [
-  { top: "#f5f4f1", left: "#dddcd8", right: "#ebeae6", stroke: "#c8c6c0", text: "#2a2a2a" },
-  { top: "#eeedea", left: "#d4d3cf", right: "#e4e3df", stroke: "#c0beb8", text: "#2a2a2a" },
-  { top: "#e8e7e4", left: "#cecdca", right: "#deddd9", stroke: "#b8b6b0", text: "#2a2a2a" },
-  { top: "#e2e1de", left: "#c8c7c4", right: "#d8d7d4", stroke: "#b0aea8", text: "#2a2a2a" },
-  { top: "#dcdcd9", left: "#c2c2bf", right: "#d2d2cf", stroke: "#a8a6a0", text: "#2a2a2a" },
-  { top: "#d6d6d3", left: "#bcbcba", right: "#ccccca", stroke: "#a0a09c", text: "#2a2a2a" },
+  { top: "#e2e8f0", left: "#cbd5e1", right: "#d8e2ed", stroke: "#94a3b8", text: "#1e293b" },
+  { top: "#cbd5e1", left: "#94a3b8", right: "#aebfcb", stroke: "#64748b", text: "#1e293b" },
+  { top: "#f1f5f9", left: "#e2e8f0", right: "#ebf1f6", stroke: "#cbd5e1", text: "#1e293b" },
 ];
 
 export const HIGHLIGHT_COLORS: Record<HighlightRole, BlockFaces> = {
   current: {
-    top: "#3a3a3a",
-    left: "#2a2a2a",
-    right: "#323232",
-    stroke: "#1a1a1a",
-    text: "#f8f7f4",
-    glow: "rgba(42, 42, 42, 0.12)",
-  },
-  compare: {
-    top: "#a8a6a0",
-    left: "#8a8884",
-    right: "#989690",
-    stroke: "#6a6864",
-    text: "#1a1a1a",
-  },
-  settled: {
-    top: "#ffffff",
-    left: "#e8e6e1",
-    right: "#f0efec",
-    stroke: "#d4d2cc",
-    text: "#2a2a2a",
-  },
-  pointer: {
-    top: "#6a6864",
-    left: "#524f4c",
-    right: "#5c5956",
-    stroke: "#3a3836",
-    text: "#f8f7f4",
-  },
-  visited: {
-    top: "#d4d2cc",
-    left: "#b8b6b0",
-    right: "#c4c2bc",
-    stroke: "#a8a6a0",
-    text: "#4a4a4a",
-  },
-  frontier: {
-    top: "#eceae6",
-    left: "#d0cec8",
-    right: "#e0deda",
-    stroke: "#2a2a2a",
-    text: "#2a2a2a",
-    glow: "rgba(42, 42, 42, 0.08)",
-  },
-  path: {
-    top: "#5a5a5a",
-    left: "#424242",
-    right: "#4e4e4e",
-    stroke: "#2a2a2a",
-    text: "#f8f7f4",
+    top: "#ff9f1c", // High-visibility cargo orange
+    left: "#e68500",
+    right: "#f29310",
+    stroke: "#b36200",
+    text: "#ffffff",
+    glow: "rgba(255, 159, 28, 0.28)",
   },
   active: {
-    top: "#3a3a3a",
-    left: "#2a2a2a",
-    right: "#323232",
-    stroke: "#1a1a1a",
-    text: "#f8f7f4",
-    glow: "rgba(42, 42, 42, 0.12)",
+    top: "#ff9f1c", // High-visibility cargo orange
+    left: "#e68500",
+    right: "#f29310",
+    stroke: "#b36200",
+    text: "#ffffff",
+    glow: "rgba(255, 159, 28, 0.28)",
+  },
+  compare: {
+    top: "#ffd166", // Safety warning yellow
+    left: "#e5b847",
+    right: "#f7ca54",
+    stroke: "#bd911c",
+    text: "#3d2900",
+  },
+  settled: {
+    top: "#06d6a0", // Quality control mint green
+    left: "#05b386",
+    right: "#06c795",
+    stroke: "#037d5e",
+    text: "#ffffff",
+  },
+  pointer: {
+    top: "#475569", // Industrial steel gray pointer
+    left: "#334155",
+    right: "#3f4e64",
+    stroke: "#1e293b",
+    text: "#ffffff",
+  },
+  visited: {
+    top: "#e2e8f0", // Clean, processed gray
+    left: "#cbd5e1",
+    right: "#d9e2ec",
+    stroke: "#94a3b8",
+    text: "#475569",
+  },
+  frontier: {
+    top: "#a5f3fc", // Chute-blue/cyan frontier
+    left: "#67e8f9",
+    right: "#8beafd",
+    stroke: "#0891b2",
+    text: "#0891b2",
+    glow: "rgba(103, 232, 249, 0.2)",
+  },
+  path: {
+    top: "#f72585", // Neon hot-pink route
+    left: "#b5179e",
+    right: "#d91e84",
+    stroke: "#7209b7",
+    text: "#ffffff",
   },
 };
 
 export const WALL_BLOCK: BlockFaces = {
-  top: "#b8b6b0",
-  left: "#9a9894",
-  right: "#a8a6a0",
-  stroke: "#7a7874",
-  text: "#4a4a4a",
+  top: "#94a3b8", // Concrete heavy barrier
+  left: "#64748b",
+  right: "#475569",
+  stroke: "#334155",
+  text: "#1e293b",
 };
 
 export const DEFAULT_BLOCK = NEUTRAL_STEPS[0];

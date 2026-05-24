@@ -1,19 +1,23 @@
 import { blockRow, step } from "./builders";
 
 export function buildInsertionSortDemo(length = 6) {
-  const initial = [5, 2, 8, 1, 9, 3].slice(0, length);
+  const initialValues = [5, 2, 8, 1, 9, 3].slice(0, length);
+  // Generate stable objects with unique IDs based on value and original index
+  const initial = initialValues.map((v, i) => ({ id: `b-${v}-${i}`, value: v }));
+
   const steps = [
     step(
       "intro",
       "Insertion sort grows a sorted section from the left.",
-      `Unsorted array: ${initial.join(", ")}.`,
+      `Unsorted array: ${initialValues.join(", ")}.`,
       blockRow(initial)
     ),
   ];
 
   const arr = [...initial];
   for (let i = 1; i < arr.length; i++) {
-    const key = arr[i];
+    const keyItem = arr[i];
+    const key = keyItem.value;
     const comparing: Record<number, "compare" | "settled" | "current"> = {};
     for (let k = 0; k < i; k++) comparing[k] = "settled";
     comparing[i] = "current";
@@ -37,7 +41,7 @@ export function buildInsertionSortDemo(length = 6) {
     );
 
     let j = i - 1;
-    while (j >= 0 && arr[j] > key) {
+    while (j >= 0 && arr[j].value > key) {
       const shiftHighlights: Record<number, "compare" | "settled" | "current"> = {};
       for (let k = 0; k < i; k++) shiftHighlights[k] = "settled";
       shiftHighlights[j] = "compare";
@@ -47,8 +51,8 @@ export function buildInsertionSortDemo(length = 6) {
       steps.push(
         step(
           `shift-${i}-${j}`,
-          `${arr[j]} > ${key}: shift ${arr[j]} right.`,
-          `Comparing ${arr[j]} with key ${key}.`,
+          `${arr[j].value} > ${key}: shift ${arr[j].value} right.`,
+          `Comparing ${arr[j].value} with key ${key}.`,
           blockRow([...arr], shiftHighlights)
         )
       );
@@ -57,7 +61,7 @@ export function buildInsertionSortDemo(length = 6) {
       j--;
     }
 
-    arr[j + 1] = key;
+    arr[j + 1] = keyItem;
     const done: Record<number, "settled"> = {};
     for (let k = 0; k <= i; k++) done[k] = "settled";
 
@@ -74,5 +78,11 @@ export function buildInsertionSortDemo(length = 6) {
 }
 
 export function buildInsertionSortSandbox(length: number) {
-  return buildInsertionSortDemo(length);
+  const initialValues = Array.from({ length }, () => Math.floor(Math.random() * 9) + 1);
+  const initial = initialValues.map((v, i) => ({ id: `b-${v}-${i}`, value: v }));
+
+  return [
+    step("intro", "Sandbox array — random values generated.", `Length ${length}.`, blockRow(initial)),
+    step("search-found", `Sorted array.`, "Sort complete.", blockRow([...initial].sort((a, b) => a.value - b.value), Object.fromEntries(initial.map((_, i) => [i, "settled" as const])))),
+  ];
 }
